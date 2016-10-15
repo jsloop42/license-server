@@ -1,4 +1,6 @@
-(ns com.qlambda.license.core
+(ns ^{:doc "A License Server"
+      :author "Jaseem V V"}
+    com.qlambda.license.core
     (:use [compojure.route :only [files not-found]]
           [compojure.core :only [defroutes GET POST DELETE ANY context]]
           [ring.middleware.reload :only [wrap-reload]]

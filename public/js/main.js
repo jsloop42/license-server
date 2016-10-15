@@ -1,14 +1,11 @@
 window.QL = window.QL || {};
 
-QL.getPublicKey = function () {
+QL.getPublicKey = function (success) {
     $.ajax({
         "type": "GET",
-        "url": "/api/crypto/publickeyder",
+        "url": "/api/crypto/publickey",
         "data": {},
-        "success": function (data) {
-            console.log(data);
-            QL.view.publickey(data);
-        },
+        "success": success,
         "error": function (err) {
             console.log(err)
         }
@@ -16,12 +13,17 @@ QL.getPublicKey = function () {
 }
 
 QL.view = {
-    publickey: function () {
-
+    publickey: function (data) {
+        $(".viewPublicKey").text(data).removeClass("display-none");
     }
-}
+};
 
 $(document).ready(function () {
     console.log("main loaded");
-    QL.getPublicKey();
+    $(".getPublicKey").on("click", function () {
+        QL.getPublicKey(function (data) {
+            console.log(data);
+            QL.view.publickey(data);
+        });
+    });
 });
