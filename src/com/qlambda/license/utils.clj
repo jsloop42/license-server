@@ -1,4 +1,6 @@
-(ns com.qlambda.license.utils
+(ns ^{:doc "Utility module"
+      :author "Jaseem V V"}
+    com.qlambda.license.utils
     (import java.io.RandomAccessFile))
 
 (defn get-file-content [path]

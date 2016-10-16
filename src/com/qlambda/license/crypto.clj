@@ -1,4 +1,6 @@
-(ns com.qlambda.license.crypto
+(ns ^{:doc "Cryptography module for the license server"
+      :author "Jaseem V V"}
+    com.qlambda.license.crypto
     (:require [clojure.java.io :as io]
               [clojure.data.codec.base64 :as b64]
               [cheshire.core :as json]
