@@ -11,13 +11,13 @@
 (def pub-key-pem-path "publickey.pem")
 (def pub-key-path "publickey.der")
 (def priv-key-path "privatekey.der")
-(def pub-key-pem (atom (slurp (io/resource pub-key-path))))
+(def pub-key-pem (slurp (io/resource pub-key-pem-path)))
 (def pub-key (utils/get-file-content (.getFile (io/resource pub-key-path))))
 (def priv-key (utils/get-file-content (.getFile (io/resource priv-key-path))))
 
 (defn get-public-key-pem []
     "Returns the public key"
-    @pub-key)
+    pub-key-pem)
 
 (defn sign [privatekey message]
     "Signs the given message using the given private key and returns base64 encoded string"
