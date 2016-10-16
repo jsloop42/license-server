@@ -4,5 +4,6 @@
     :dependencies [[org.clojure/clojure "1.8.0"]
                    [ring "1.5.0"]
                    [compojure "1.5.1"]
-                   [http-kit "2.2.0"]]
+                   [http-kit "2.2.0"]
+                   [cheshire "5.6.3"]]
     :main com.qlambda.license.core)

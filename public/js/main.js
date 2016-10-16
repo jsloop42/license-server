@@ -14,7 +14,8 @@ QL.getPublicKey = function (success) {
 
 QL.view = {
     publickey: function (data) {
-        $(".viewPublicKey").text(data).removeClass("display-none");
+        data = JSON.parse(data);
+        $(".viewPublicKey").text(data.publickey).removeClass("display-none");
     }
 };
 
