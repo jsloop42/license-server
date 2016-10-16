@@ -28,7 +28,7 @@ Place the generated keys under `license-server/resources` directory.
 # Use leiningen to run the project. Go to the root folder and run
 $ lein run
 ```
-This should run the server at the URL http://localhost:8080. Open the URL in the browser and you can perform the following actions from the UI.
+This should run the server at the URL `http://localhost:8080`. Open the URL in the browser and you can perform the following actions from the UI.
 * View public key
 * Generate license (a signed string) from the given text message. Signing uses the private key.
 * Verify the license by providing the text message and the signed string. Verification uses the public key.
