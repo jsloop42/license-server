@@ -1,44 +1,52 @@
 (ns com.qlambda.license.crypto
     (:require [clojure.java.io :as io]
               [clojure.data.codec.base64 :as b64]
+              [cheshire.core :as json]
               [com.qlambda.license.utils :as utils])
     (import java.security.KeyFactory
             java.security.Signature
-            java.security.interfaces.RSAPrivateKey
-            java.security.interfaces.RSAPublicKey
-            java.security.spec.PKCS8EncodedKeySpec))
+            java.security.spec.X509EncodedKeySpec
+            java.security.spec.RSAPublicKeySpec
+            java.security.spec.PKCS8EncodedKeySpec
+            java.security.interfaces.RSAPrivateCrtKey))
 
-(def pub-key-path "publickey.pem")
-;(def priv-key-path "privatekey-nocrypt.pem")
-(def pub-key (atom (slurp (io/resource pub-key-path))))
-;(def priv-key (atom (slurp (io/resource priv-key-path))))
-(def priv-key (utils/get-file-content (.getFile (io/resource "privatekey.der"))))
-(def keyfactory (KeyFactory/getInstance "RSA"))
-(def signature (Signature/getInstance "SHA1withRSA"))
+(def pub-key-pem-path "publickey.pem")
+(def pub-key-path "publickey.der")
+(def priv-key-path "privatekey.der")
+(def pub-key-pem (atom (slurp (io/resource pub-key-path))))
+(def pub-key (utils/get-file-content (.getFile (io/resource pub-key-path))))
+(def priv-key (utils/get-file-content (.getFile (io/resource priv-key-path))))
 
-(defn get-public-key-str []
+(defn get-public-key-pem []
     "Returns the public key"
     @pub-key)
 
-(defn str-replace [string pattern with]
-    "String replace"
-    (clojure.string/replace string pattern with))
-
-(defn decode-private-key [privatekey]
-    "Decodes the base64 encoded private key string"
-    (b64/decode (.getBytes privatekey)))
-
-(defn extract-private-key [privatekey]
-    (str-replace (str-replace privatekey "-----BEGIN PRIVATE KEY-----\n" "") "-----END PRIVATE KEY-----" ""))
-
 (defn sign [privatekey message]
-    (. signature initSign privatekey)
-    (. signature update (.getBytes message "UTF-8"))
-    ;(apply str (b64/encode (. signature sign))))
-    (String. (b64/encode (. signature sign)) "UTF-8"))
+    "Signs the given message using the given private key and returns base64 encoded string"
+    (let [sig (Signature/getInstance "SHA256withRSA")]
+        (. sig initSign privatekey)
+        (. sig update (.getBytes message "UTF-8"))
+        (String. (b64/encode (. sig sign)) "UTF-8")))
+
+(defn verify [publickey license message]
+    "Verfies the signature and the message using the public key"
+    (let [sig (Signature/getInstance "SHA256withRSA")]
+        (. sig initVerify publickey)
+        (. sig update (.getBytes message "UTF-8"))
+        (. sig verify (b64/decode (.getBytes license "UTF-8")))))
+
+ (defn get-public-key []
+    "Return an RSAPublicKey"
+    (. (KeyFactory/getInstance "RSA") generatePublic (X509EncodedKeySpec. pub-key)))
 
 (defn get-private-key []
-    ;(. keyfactory generatePrivate (PKCS8EncodedKeySpec. (decode-private-key (extract-private-key @priv-key)))))
-    (. keyfactory generatePrivate (PKCS8EncodedKeySpec. priv-key)))
+    "Return an RSAPrivateKey"
+    (. (KeyFactory/getInstance "RSA") generatePrivate (PKCS8EncodedKeySpec. priv-key)))
 
-(defn generate-license [])
+(defn generate-license [params]
+    "Signs the obtained license details with the private key and returns a base64 encoded string"
+    (sign (get-private-key) (json/generate-string params)))
+
+(defn verify-license [params]
+    "Verfies whether the license is signed by the private key and is not tampered with"
+    (verify (get-public-key) (get params :license) (get params :msg)))
