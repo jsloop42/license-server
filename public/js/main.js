@@ -5,9 +5,7 @@ QL.getPublicKey = function (success) {
         "type": "GET",
         "url": "/api/crypto/publickey",
         "success": success,
-        "error": function (err) {
-            console.log(err)
-        }
+        "error": QL.view.error
     });
 };
 
@@ -18,9 +16,7 @@ QL.generateLicense = function (params, success) {
         "contentType": "application/json",
         "success": success,
         "data": JSON.stringify(params),
-        "error": function (err) {
-            console.log(err)
-        }
+        "error": QL.view.error
     });  
 };
 
@@ -31,42 +27,89 @@ QL.verifyLicense = function (params, success) {
         "contentType": "application/json",
         "success": success,
         "data": JSON.stringify(params),
-        "error": function (err) {
-            console.log(err)
-        }
+        "error": QL.view.error
     });  
+};
+
+QL.isValidJSON = function (str) {
+    try {
+        JSON.parse(str);
+    } catch (e) {
+        return false;
+    }
+    return true;
 };
 
 QL.view = {
     publickey: function (data) {
+        $(".field").addClass("display-none");
+        QL.view.clearValid();
         $(".viewPublicKey").text(data.status ? data.publickey : data.msg).removeClass("display-none");
+    },
+    generateLicense: function () {
+        $(".field").addClass("display-none");
+        QL.view.clearValid();
+        $(".viewGenerateLicense").removeClass("display-none");        
+    },
+    license: function (data) {
+        $(".field").addClass("display-none");
+        $(".license").val(data.license);
+        $(".msg").val(data.msg);
+        $(".viewLicense").removeClass("display-none");
+    },
+    licenseError: function (msg) {
+        $(".licenseError").text(msg).removeClass("display-none");
+        setTimeout(function () {
+            $(".licenseError").text("").addClass("display-none");
+        }, 4000);
+    },
+    validate: function (data) {
+        if (data.valid) {
+            $(".validateMsg").text("License is valid").removeClass("display-none invalid").addClass("valid");
+        } else {
+            $(".validateMsg").text("License is invalid").removeClass("display-none valid").addClass("invalid");
+        }
+    },
+    clearValid: function () {
+        $(".validateMsg").text("").addClass("display-none").removeClass("valid invalid");
+    },
+    error: function (err) {
+        QL.view.clearValid();
+        $(".error").html(err.statusText + "</br>" + err.responseText + "</br>Please enter a valid signature.")
+                   .removeClass("display-none");
+        setTimeout(function () {
+            $(".error").html("").addClass("display-none");
+        }, 4000);
     }
 };
 
 $(document).ready(function () {
-    console.log("main loaded");
     $(".getPublicKey").on("click", function () {
         QL.getPublicKey(function (data) {
             QL.view.publickey(data);
         });
     });
     $(".generateLicense").on("click", function () {
-        QL.generateLicense({
-            "users": 5,
-            "days": 30,
-            "apps": 20,
-            "name": "user 1",
-            "startDate": new Date().getTime()
-        }, function (data) {
-            console.log(data);
+        QL.view.generateLicense();
+        $(".genLicenseSubmit").on("click", function () {
+            var msg = $(".licenseMsg").val();
+            if (!QL.isValidJSON(msg)) {
+                QL.view.licenseError("Please enter a valid JSON string");
+                return;
+            }
+            QL.generateLicense(msg, function (data) {
+                QL.view.license(data); 
+            });
         });
     });
-    $(".verifyLicense").on("click", function () {
+    $(".validate").on("click", function () {
+        var licenseSig = $(".license").val(),
+            msg = $(".msg").val();
         QL.verifyLicense({
-            "license": "0SJamUioBsWQc9wJUT92Sut6fTJnqSk2PxrtnuQ3YHr6wFsQMWp3wV6EzsiPFMw0Zho4qBExN1m0GecODmBg3GWxkYL6PJSMqcD6efPhnE4OrR1+8xzh+OYTiWf54p74gO8Nt/hn2Ap9ndwkOJyDa9zQIjpEv08vS1RqsFFb5d/u48IogTj+GiCCt/qI8j4Vd+qv0/a+yg900gbKO/cxWP7ym7aU7Fr7WnqDyIFfzHTqwPPx2AqR35QtZFMXsYbzOV9SRXpGTlwgwM5yb79mfcf1Xr8WwdIis9xwX/MfI2AhojaI5cGPw+AiGkQnGZ4QC26ykFwfQGTRgchzh+ldiA==",
-            "msg": JSON.stringify({"users":5,"days":30,"apps":20,"name":"user 1","startDate":1476624758802})
+            "license": licenseSig,
+            "msg": msg
         }, function (data) {
-            console.log(data);
-        });
+            QL.view.validate(data);
+        })
     });
 });

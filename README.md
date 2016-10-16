@@ -31,7 +31,7 @@ $ lein run
 This should run the server at the URL `http://localhost:8080`. Open the URL in the browser and you can perform the following actions from the UI.
 * View public key
 * Generate license (a signed string) from the given JSON message string. Signing uses the private key. (UI in progress)
-* Verify the license by providing the JSON message and the signed string. Verification uses the public key. (UI in progress)
+* Verify the license by providing the JSON message and the signed string. If the message is altered, then the verification will fail. Verification uses the public key. (UI in progress)
 
 Private key must be kept private and should not be accessible to the users.
 

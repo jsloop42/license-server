@@ -6,18 +6,34 @@
     <script src="static/js/libs/jquery-3.1.1.min.js"></script>
     <script src="static/js/main.js"></script>
 </head>
-<body>
+<body class="body">
     <header>
         <h2>License Server</h2>
+        <div class="version">v1.0.0</div>
         <div>
             <button class="getPublicKey">Get Public Key</button>
             <button class="generateLicense">Generate License</button>
-            <button class="verifyLicense">Verify License</button>
         </div>
     </header>    
     <section class="section-top">
-        <div class="viewPublicKey view-public-key display-none"></div>
-        <div class="viewVerifyMessage view-public-key display-none"></div>
+        <div class="error err display-none"></div>
+        <div class="viewPublicKey field view-public-key display-none"></div>
+        <div class="viewGenerateLicense field display-none">
+            <div><label>Enter your license info as a JSON</label></div>
+            <textarea class="licenseMsg license-msg"
+                placeholder='{"users": 5, "apps": 15, "days": 30, "startDate": 1476633883518, "name": "Acme"}'></textarea>
+            <div class="licenseError license-error display-none"></div>
+            <button class="genLicenseSubmit license-submit display-block">Submit</button>
+        </div>
+        <div class="viewLicense field display-none">
+            <div><label>Base64 encoded license signature</label></div>
+            <textarea class="license license-ta"></textarea>
+            <div><label>License message</label></div>
+            <textarea class="msg msg-ta"></textarea>
+            <div><button class="validate">Validate</button><span class="validateMsg display-none"></span></div>
+            <div class="validate-info">If you tamper with the signature or the message, the validation will fail.</div>
+        </div>
     </section>
+    <footer class="footer">&copy;2016 Jaseem V V. Written in Clojure with <span class="red">❤<span></footer>
 </body>
 </html>

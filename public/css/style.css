@@ -4,10 +4,73 @@
 .display-block {
     display: block;
 }
+.body {
+    margin-left: .75em;
+}
 .section-top {
     padding-top: 1em;
 }
 .view-public-key {
     white-space: pre;
     font-family: monospace;
+}
+.license-msg {
+    margin-top: .5em;
+    width: 50%;
+    height: 3em;
+}
+.license-submit {
+    margin-top: .5em;
+}
+.license-error {
+    color: red;
+    margin: 0 0 .75em 0;
+}
+.license-ta {
+    width: 50%;
+    height: 5em;
+    margin: .5em 0;
+}
+.msg-ta {
+    width: 50%;
+    height: 2.5em;
+    margin: .5em 0;
+}
+.err {
+    color: red;
+    margin: 0 0 .5em 0;
+    background: lightgoldenrodyellow;
+}
+.valid {
+    margin-left: .75em;
+    color: darkgreen;
+    background: lightgreen;
+    padding: .2em .5em;
+}
+.invalid {
+    margin-left: .75em;
+    color: darkred;
+    background: lightsalmon;
+    padding: .2em .5em;
+}
+.validate-info {
+    font-size: 12px;
+    font-family: sans-serif;
+    margin: .75em 0;
+    color: gray;
+}
+.version {
+    margin: -1.25em 0 1em 0;
+    font-size: 14px;
+}
+.red {
+    color: red;
+}
+.footer {
+    width: 100%;
+    position: absolute;
+    bottom: 0px; 
+    left: 0px; 
+    text-align: center;
+    margin-bottom: .25em;
 }
