@@ -8,7 +8,8 @@
     (:require [com.qlambda.license.crypto :as crypto]
               [cheshire.core :as json]
               [ring.util.response :as resp]
-              [clojure.java.io :as io]))
+              [clojure.java.io :as io]
+              [ring.middleware.logger :as logger]))
 
 (defn json-response [body-map]
     "Returns a json http response"
@@ -32,5 +33,6 @@
     (not-found (json-response {:status false :msg "Page not found"})))
 
 (defn -main []
-    (run-server (wrap-reload #'app-routes) {:port 8080})
+    (org.apache.log4j.BasicConfigurator/configure)
+    (run-server (logger/wrap-with-logger (wrap-reload #'app-routes)) {:port 8080})
     (println "Server started."))
