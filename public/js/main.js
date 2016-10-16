@@ -31,15 +31,6 @@ QL.verifyLicense = function (params, success) {
     });  
 };
 
-QL.isValidJSON = function (str) {
-    try {
-        JSON.parse(str);
-    } catch (e) {
-        return false;
-    }
-    return true;
-};
-
 QL.view = {
     publickey: function (data) {
         $(".field").addClass("display-none");
@@ -93,10 +84,6 @@ $(document).ready(function () {
         QL.view.generateLicense();
         $(".genLicenseSubmit").on("click", function () {
             var msg = $(".licenseMsg").val();
-            if (!QL.isValidJSON(msg)) {
-                QL.view.licenseError("Please enter a valid JSON string");
-                return;
-            }
             QL.generateLicense(msg, function (data) {
                 QL.view.license(data); 
             });
