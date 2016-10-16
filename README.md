@@ -10,11 +10,14 @@ This is a license server. It can be used to generate a license from a text messa
 ```sh
 # Generate a 2048-bit RSA private key
 $ openssl genrsa -out privatekey.pem 2048
-Convert private Key to PKCS#8 in DER format
+
+#Convert private Key to PKCS#8 in DER format
 $ openssl pkcs8 -topk8 -inform PEM -outform DER -in privatekey.pem -out privatekey.der -nocrypt
-Output public key in DER format
+
+#Output public key in DER format
 $ openssl rsa -in privatekey.pem -pubout -outform DER -out publickey.der
-Output public key in PEM format (only required for viewing)
+
+#Output public key in PEM format (only required for viewing)
 $ openssl rsa -in private.pem -outform PEM -pubout -out public.pem
 ```
 Place the generated keys under `license-server/resources` directory.
