@@ -41,7 +41,9 @@
     (not-found (json-response {:status false :msg "Page not found"})))
 
 (defn -main []
-    ;(org.apache.log4j.BasicConfigurator/configure)
-    ;(run-server (logger/wrap-with-logger (wrap-reload #'app-routes)) {:port 8080})
-    (run-server (wrap-json-body (wrap-reload #'app-routes) {:keywords? true :bigdecimals? true}) {:port 8080})
+    (org.apache.log4j.BasicConfigurator/configure)
+    (-> (wrap-reload #'app-routes)
+        (wrap-json-body {:keywords? true :bigdecimals? true})
+        (logger/wrap-with-logger)
+        (run-server {:port 8080}))
     (println "Server started."))
