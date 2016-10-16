@@ -32,6 +32,7 @@
      (json-response {:valid (crypto/verify-license params) :status true}))
 
 (defroutes app-routes
+    "URL mapping"
     (GET "/" [] (resp/file-response "index.html" {:root "public"}))
     (files "/static/")
     (context "/api" []
@@ -41,6 +42,7 @@
     (not-found (json-response {:status false :msg "Page not found"})))
 
 (defn -main []
+    "Main entry point"
     (org.apache.log4j.BasicConfigurator/configure)
     (-> (wrap-reload #'app-routes)
         (wrap-json-body {:keywords? true :bigdecimals? true})
