@@ -2,35 +2,34 @@
       :author "Jaseem V V"}
     com.qlambda.license.core
     (:use [compojure.route :only [files not-found]]
-          [compojure.core :only [defroutes GET POST DELETE ANY context]]
+          [compojure.core :only [defroutes GET POST context]]
           [ring.middleware.reload :only [wrap-reload]]
           org.httpkit.server)
     (:require [com.qlambda.license.crypto :as crypto]
-              [com.qlambda.license.utils :as utils]
               [cheshire.core :as json]
               [ring.util.response :as resp]
               [clojure.java.io :as io]))
 
-(defn get-publickey-der []
+(defn json-response [body-map]
+    "Returns a json http response"
     {:status 200
-     :headers {"Content-Type" "application/octet-stream"}
-     :body (io/input-stream (io/resource "publickey.der"))})
+     :headers {"Content-Type" "application/json"}
+     :body (json/generate-string body-map)})
 
-(defn get-publickey []
-    {:status 200
-     :headers {"Content-Type" "text/plain"}
-     ;:body (json/generate-string {:publickey (apply str (map char @(utils/get-file-content (.getFile (io/resource pub-key-path)))))})})
-     ;:body (json/generate-string {:publickey (slurp (io/resource pub-key-path))})})
-     :body (json/generate-string {:publickey (crypto/read-pub-key) :status true})})
+(defn get-public-key []
+    "Return the public key"
+    (json-response {:publickey (crypto/get-public-key-str) :status true}))
+
+(defn generate-license []
+     (json-response {:publickey (crypto/generate-license) :status true}))
 
 (defroutes app-routes
     (GET "/" [] (resp/file-response "index.html" {:root "public"}))
     (files "/static/")
     (context "/api" []
-        (GET "/crypto" [] (crypto/hello-crypto))
-        (GET "/crypto/publickeyder" [] (get-publickey-der))
-        (GET "/crypto/publickey" [] (get-publickey)))
-    (not-found (json/generate-string {:status false :msg "Page not found"})))
+        (GET "/crypto/publickey" [] (get-public-key))
+        (POST "/crypto/license" [] (generate-license)))
+    (not-found (json-response {:status false :msg "Page not found"})))
 
 (defn -main []
     (run-server (wrap-reload #'app-routes) {:port 8080})

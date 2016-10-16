@@ -4,7 +4,6 @@ QL.getPublicKey = function (success) {
     $.ajax({
         "type": "GET",
         "url": "/api/crypto/publickey",
-        "data": {},
         "success": success,
         "error": function (err) {
             console.log(err)
@@ -14,8 +13,7 @@ QL.getPublicKey = function (success) {
 
 QL.view = {
     publickey: function (data) {
-        data = JSON.parse(data);
-        $(".viewPublicKey").text(data.publickey).removeClass("display-none");
+        $(".viewPublicKey").text(data.status ? data.publickey : data.msg).removeClass("display-none");
     }
 };
 
@@ -23,8 +21,9 @@ $(document).ready(function () {
     console.log("main loaded");
     $(".getPublicKey").on("click", function () {
         QL.getPublicKey(function (data) {
-            console.log(data);
             QL.view.publickey(data);
         });
+    });
+    $(".verifyMessage").on("click", function () {
     });
 });
