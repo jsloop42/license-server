@@ -6,9 +6,7 @@
     (import java.security.KeyFactory
             java.security.Signature
             java.security.spec.X509EncodedKeySpec
-            java.security.spec.RSAPublicKeySpec
-            java.security.spec.PKCS8EncodedKeySpec
-            java.security.interfaces.RSAPrivateCrtKey))
+            java.security.spec.PKCS8EncodedKeySpec))
 
 (def pub-key-pem-path "publickey.pem")
 (def pub-key-path "publickey.der")
