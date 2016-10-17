@@ -15,7 +15,7 @@ QL.generateLicense = function (params, success) {
         "url": "/api/crypto/license",
         "contentType": "application/json",
         "success": success,
-        "data": JSON.stringify(params),
+        "data": params,
         "error": QL.view.error
     });  
 };
