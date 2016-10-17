@@ -3,6 +3,7 @@
     com.qlambda.license.core
     (:use [compojure.route :only [files not-found]]
           [compojure.core :only [defroutes GET POST context]]
+          [compojure.handler :only [site]]
           [ring.middleware.reload :only [wrap-reload]]
           [ring.middleware.json :only [wrap-json-body]]
           [ring.util.response :only [response]]
@@ -41,10 +42,13 @@
         (POST "/crypto/license/verify" {body :body} (verify-license body)))
     (not-found (json-response {:status false :msg "Page not found"})))
 
+(def app (site #'app-routes))
+
 (defn -main []
     "Main entry point"
     (org.apache.log4j.BasicConfigurator/configure)
-    (-> (wrap-reload #'app-routes)
+    (-> app
+        (wrap-reload)
         (wrap-json-body {:keywords? true :bigdecimals? true})
         (logger/wrap-with-logger)
         (run-server {:port 8080}))
