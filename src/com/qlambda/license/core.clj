@@ -50,6 +50,6 @@
     (-> app
         (wrap-reload)
         (wrap-json-body {:keywords? true :bigdecimals? true})
-        (logger/wrap-with-logger)
+        ;(logger/wrap-with-logger)
         (run-server {:port 8080}))
     (println "Server started."))

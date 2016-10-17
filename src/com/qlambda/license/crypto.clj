@@ -44,6 +44,7 @@
     (. (KeyFactory/getInstance "RSA") generatePrivate (PKCS8EncodedKeySpec. priv-key)))
 
 (defn generate-license [params]
+    (println params)
     "Signs the obtained license details with the private key and returns a base64 encoded string"
     (sign (get-private-key) (json/generate-string params)))
 
