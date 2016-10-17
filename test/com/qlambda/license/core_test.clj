@@ -92,5 +92,14 @@
                           (mock/content-type "application/json"))
               response (handler request)]
             (is (= (:status response) 200))
-            (let [res (json/parse-string (:body response) true)]
-                (is (= (:valid res) false))))))
+            (is (= (:valid (json/parse-string (:body response) true)) false))))
+    (testing "license validation failure for tampered signature"
+        (let [handler (-> core/app (wrap-json-body {:keywords? true :bigdecimals? true}))
+              license-string (json/generate-string license-msg)
+              request (-> (mock/request :post "/api/crypto/license/verify"
+                            (json/generate-string {:license (join [@license-signature "111"]) :msg license-string}))
+                          (mock/content-type "application/json"))
+              response (handler request)]
+            (is (= (:status response) 200))
+            (is (= (:valid (json/parse-string (:body response) true)) false)))))
+            

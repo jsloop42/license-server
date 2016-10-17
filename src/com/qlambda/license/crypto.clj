@@ -8,7 +8,8 @@
     (import java.security.KeyFactory
             java.security.Signature
             java.security.spec.X509EncodedKeySpec
-            java.security.spec.PKCS8EncodedKeySpec))
+            java.security.spec.PKCS8EncodedKeySpec
+            java.security.SignatureException))
 
 (def pub-key-pem-path "publickey.pem")
 (def pub-key-path "publickey.der")
@@ -49,4 +50,6 @@
 
 (defn verify-license [params]
     "Verfies whether the license is signed by the private key and is not tampered with"
-    (verify (get-public-key) (get params :license) (get params :msg)))
+    (try
+        (verify (get-public-key) (get params :license) (get params :msg))
+        (catch SignatureException e false)))
