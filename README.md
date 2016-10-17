@@ -33,6 +33,11 @@ This should run the server at the URL `http://localhost:8080`. Open the URL in t
 * Generate license (a signed string) from the given message. Signing uses the private key.
 * Verify the license by providing the message and the license signature. If the message is altered, then the verification will fail. Verification uses the public key.
 
+### Running the tests
+
+```sh
+$ lein test
+```
 Private key must be kept private and should not be accessible to the users.
 
 Written in Clojure with ❤ by Jaseem V V (a.k.a kadaj)  
