@@ -66,7 +66,7 @@ QL.view = {
     },
     error: function (err) {
         QL.view.clearValid();
-        $(".error").html(err.statusText + "</br>" + err.responseText + "</br>Please enter a valid signature.")
+        $(".error").html(err.statusText + "<br />" + err.responseText + "<br />Please enter a valid signature.")
                    .removeClass("display-none");
         setTimeout(function () {
             $(".error").html("").addClass("display-none");
