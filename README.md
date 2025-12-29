@@ -39,6 +39,3 @@ This should run the server at the URL `http://localhost:8080`. Open the URL in t
 $ lein test
 ```
 Private key must be kept private and should not be accessible to the users.
-
-Written in Clojure with ❤ by Jaseem V V  
-Sunday 16 October 2016
