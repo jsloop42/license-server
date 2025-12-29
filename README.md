@@ -1,7 +1,7 @@
 # A License Server
 v1.0.0
 
-This is a license server. It can be used to generate a license from a text message and signing it with the private key. The license and the text message can then be verified using the public key. It uses RSA cryptography.
+This is a license server. It can be used to generate a license from a text message and signing it with the private key. The license with the text message can then be verified using the public key. It uses RSA cryptography.
 
 ## Usage
 
