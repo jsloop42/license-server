@@ -14,22 +14,26 @@
             [cheshire.core :as json]
             [ring.middleware.logger :as logger]))
 
-(defn json-response [body-map]
-  "Returns a json http response"
+(defn json-response
+  "Returns a json http response."
+  [body-map]
   {:status 200
    :headers {"Content-Type" "application/json"}
    :body (json/generate-string body-map)})
 
-(defn get-public-key []
-  "Return the public key"
+(defn get-public-key 
+  "Return the public key."
+  []
   (json-response {:publickey (crypto/get-public-key-pem) :status true}))
 
-(defn generate-license [params]
-  "Returns the generated license with the params"
+(defn generate-license 
+  "Returns the generated license with the params."
+  [params]
   (json-response {:license (crypto/generate-license params) :msg (json/generate-string params) :status true}))
 
-(defn verify-license [params]
-  "Verfies the given license with the params"
+(defn verify-license 
+  "Verfies the given license with the params."
+  [params]
   (json-response {:valid (crypto/verify-license params) :status true}))
 
 (defroutes app-routes
@@ -44,8 +48,9 @@
 
 (def app (site #'app-routes))
 
-(defn -main []
-  "Main entry point"
+(defn -main 
+  "Main entry point."
+  []
   (org.apache.log4j.BasicConfigurator/configure)
   (-> app
       (wrap-reload)
